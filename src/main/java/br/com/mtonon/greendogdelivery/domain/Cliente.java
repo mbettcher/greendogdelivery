@@ -1,6 +1,8 @@
 package br.com.mtonon.greendogdelivery.domain;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -13,18 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@EqualsAndHashCode
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Cliente {
 
 	@Id
@@ -43,6 +35,75 @@ public class Cliente {
 	@Cascade(CascadeType.ALL)
 	private List<Pedido> pedidos;
 	
+	public Cliente() {
+		super();
+	}
+	
+
+	public Cliente(Long id,
+			@NotNull @Length(min = 2, max = 60, message = "O tamanho do nome deve ser entre {min} e {max} caracteres") String nome,
+			@NotNull @Length(min = 2, max = 300, message = "O tamanho do endereço deve ser entre {min} e {max} caracteres") String endereco) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.endereco = endereco;
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
+	public void novoPedido(Pedido pedido) {
+		if(this.pedidos == null) pedidos = new ArrayList<Pedido>();
+		pedidos.add(pedido);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(id, other.id);
+	}
+
 	
 
 }
